@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "react": "16.11.0",
-    "react-native": "0.62.0"
+    "react-native": "0.62.0",
+    "react-native-ble-plx": "https://github.com/dpwiese/react-native-ble-plx.git#80eb762996e14c5549fa44f15e1413e6fe609c7c"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

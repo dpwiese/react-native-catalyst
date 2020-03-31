@@ -182,6 +182,10 @@ PODS:
     - React-cxxreact (= 0.62.0)
     - React-jsi (= 0.62.0)
   - React-jsinspector (0.62.0)
+  - react-native-ble-plx (1.1.1):
+    - React
+    - react-native-ble-plx-swift
+  - react-native-ble-plx-swift (1.1.1)
   - React-RCTActionSheet (0.62.0):
     - React-Core/RCTActionSheetHeaders (= 0.62.0)
   - React-RCTAnimation (0.62.0):
@@ -260,6 +264,8 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
+  - react-native-ble-plx-swift (from `../node_modules/react-native-ble-plx`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -306,6 +312,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-ble-plx:
+    :path: "../node_modules/react-native-ble-plx"
+  react-native-ble-plx-swift:
+    :path: "../node_modules/react-native-ble-plx"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -345,6 +355,8 @@ SPEC CHECKSUMS:
   React-jsi: bc8166d6833cdcb0848c80710b26ce63fad2c099
   React-jsiexecutor: 8bf0b2707f05865113415088c398a7f98c0cf546
   React-jsinspector: 8e5913c4c6c54f0d3f9c9fc630c465a89cded65d
+  react-native-ble-plx: 304c7bee074a05581672c9990f375b3906808718
+  react-native-ble-plx-swift: eb64f02b988becb84a60164aba9fab5d6ddb6dc8
   React-RCTActionSheet: 674afbc8b9c76e0a83520e0a51da29a70802c03f
   React-RCTAnimation: f5f24330d09ee677fb49e0782f8321868f4df431
   React-RCTBlob: b773ce6138ab0d172ebd8a455fd4efd200a92549
@@ -357,6 +369,6 @@ SPEC CHECKSUMS:
   ReactCommon: d22162ab8f1358c53dfcd0f9c4d82d38facdbc48
   Yoga: 9db9ff2025ad21d1ac0a8b3c85d5ac4e7c29d525
 
-PODFILE CHECKSUM: e21bab295d6a971ad207b2f5aca9f1454312840a
+PODFILE CHECKSUM: 01fb7b054f1ec1e638bf53d7302fe0c54adcfc9b
 
 COCOAPODS: 1.8.3
