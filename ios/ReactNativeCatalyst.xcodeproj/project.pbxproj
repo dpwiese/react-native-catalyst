@@ -62,6 +62,7 @@
 		7766F9AC544CB42A1006CF87 /* Pods-ReactNativeCatalyst-ReactNativeCatalystTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeCatalyst-ReactNativeCatalystTests.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeCatalyst-ReactNativeCatalystTests/Pods-ReactNativeCatalyst-ReactNativeCatalystTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9FB37EABD0A41CB4468C0C82 /* libPods-ReactNativeCatalyst-ReactNativeCatalystTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeCatalyst-ReactNativeCatalystTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC64ED59FE4C472BD68449DD /* libPods-ReactNativeCatalyst.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeCatalyst.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBAB4A892433B14B00FD670B /* ReactNativeCatalyst.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ReactNativeCatalyst.entitlements; path = ReactNativeCatalyst/ReactNativeCatalyst.entitlements; sourceTree = "<group>"; };
 		DD769734CAABD7FF7D1040AE /* Pods-ReactNativeCatalyst.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeCatalyst.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeCatalyst/Pods-ReactNativeCatalyst.release.xcconfig"; sourceTree = "<group>"; };
 		DFBB599565432E1D46DF1CD1 /* Pods-ReactNativeCatalyst-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeCatalyst-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeCatalyst-tvOS/Pods-ReactNativeCatalyst-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -125,6 +126,7 @@
 		13B07FAE1A68108700A75B9A /* ReactNativeCatalyst */ = {
 			isa = PBXGroup;
 			children = (
+				DBAB4A892433B14B00FD670B /* ReactNativeCatalyst.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -194,7 +196,6 @@
 				189070E9691F6A7A9AC50B37 /* Pods-ReactNativeCatalyst-tvOSTests.debug.xcconfig */,
 				71403B2F0CAFB7CD8779A11F /* Pods-ReactNativeCatalyst-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -629,6 +630,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ReactNativeCatalyst/ReactNativeCatalyst.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -644,8 +646,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ReactNativeCatalyst;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -656,6 +660,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ReactNativeCatalyst/ReactNativeCatalyst.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = ReactNativeCatalyst/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -666,7 +671,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = ReactNativeCatalyst;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
