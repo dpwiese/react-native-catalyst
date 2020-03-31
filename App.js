@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  NativeModules,
 } from 'react-native';
 
 import {
@@ -24,7 +25,19 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Button from './Button';
+
+const Computation = NativeModules.Computation;
+
 const App: () => React$Node = () => {
+  nativeCallback = (out) => {
+    console.log(out);
+  };
+
+  runNativeComuptation = () => {
+    Computation.concatenateStrings('hello', 'world', this.nativeCallback);
+  };
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -41,6 +54,7 @@ const App: () => React$Node = () => {
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
+              <Button onPress={this.runNativeComuptation} text={"NATIVE"}/>
               <Text style={styles.sectionDescription}>
                 Edit <Text style={styles.highlight}>App.js</Text> to change this
                 screen and then come back to see your edits.

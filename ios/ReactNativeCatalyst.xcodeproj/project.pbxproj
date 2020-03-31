@@ -20,6 +20,8 @@
 		9824BF614C0652B30123F9F2 /* libPods-ReactNativeCatalyst-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14549A2E9CE4BCDDBF5BC01E /* libPods-ReactNativeCatalyst-tvOSTests.a */; };
 		9C32A7118FD28C78B0A1E651 /* libPods-ReactNativeCatalyst-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2736CD33F3C8FD62F4042C94 /* libPods-ReactNativeCatalyst-tvOS.a */; };
 		B68192FD14D53CD0828DC2C0 /* libPods-ReactNativeCatalyst.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC64ED59FE4C472BD68449DD /* libPods-ReactNativeCatalyst.a */; };
+		DBAB4A942433B73400FD670B /* Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBAB4A932433B73300FD670B /* Sample.framework */; };
+		DBAB4A992433B73D00FD670B /* Computation.m in Sources */ = {isa = PBXBuildFile; fileRef = DBAB4A972433B73D00FD670B /* Computation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,9 @@
 		9FB37EABD0A41CB4468C0C82 /* libPods-ReactNativeCatalyst-ReactNativeCatalystTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeCatalyst-ReactNativeCatalystTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC64ED59FE4C472BD68449DD /* libPods-ReactNativeCatalyst.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativeCatalyst.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBAB4A892433B14B00FD670B /* ReactNativeCatalyst.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ReactNativeCatalyst.entitlements; path = ReactNativeCatalyst/ReactNativeCatalyst.entitlements; sourceTree = "<group>"; };
+		DBAB4A932433B73300FD670B /* Sample.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sample.framework; sourceTree = "<group>"; };
+		DBAB4A972433B73D00FD670B /* Computation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Computation.m; sourceTree = "<group>"; };
+		DBAB4A982433B73D00FD670B /* Computation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Computation.h; sourceTree = "<group>"; };
 		DD769734CAABD7FF7D1040AE /* Pods-ReactNativeCatalyst.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeCatalyst.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeCatalyst/Pods-ReactNativeCatalyst.release.xcconfig"; sourceTree = "<group>"; };
 		DFBB599565432E1D46DF1CD1 /* Pods-ReactNativeCatalyst-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeCatalyst-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeCatalyst-tvOS/Pods-ReactNativeCatalyst-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -83,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBAB4A942433B73400FD670B /* Sample.framework in Frameworks */,
 				B68192FD14D53CD0828DC2C0 /* libPods-ReactNativeCatalyst.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,6 +132,7 @@
 		13B07FAE1A68108700A75B9A /* ReactNativeCatalyst */ = {
 			isa = PBXGroup;
 			children = (
+				DBAB4A952433B73D00FD670B /* Helpers */,
 				DBAB4A892433B14B00FD670B /* ReactNativeCatalyst.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -141,6 +148,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DBAB4A932433B73300FD670B /* Sample.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				CC64ED59FE4C472BD68449DD /* libPods-ReactNativeCatalyst.a */,
@@ -197,6 +205,24 @@
 				71403B2F0CAFB7CD8779A11F /* Pods-ReactNativeCatalyst-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		DBAB4A952433B73D00FD670B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				DBAB4A962433B73D00FD670B /* Computation */,
+			);
+			name = Helpers;
+			path = ReactNativeCatalyst/Helpers;
+			sourceTree = "<group>";
+		};
+		DBAB4A962433B73D00FD670B /* Computation */ = {
+			isa = PBXGroup;
+			children = (
+				DBAB4A972433B73D00FD670B /* Computation.m */,
+				DBAB4A982433B73D00FD670B /* Computation.h */,
+			);
+			path = Computation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -534,6 +560,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				DBAB4A992433B73D00FD670B /* Computation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,6 +662,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BBL3B8874A;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
@@ -665,6 +696,10 @@
 				CODE_SIGN_ENTITLEMENTS = ReactNativeCatalyst/ReactNativeCatalyst.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BBL3B8874A;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = ReactNativeCatalyst/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
