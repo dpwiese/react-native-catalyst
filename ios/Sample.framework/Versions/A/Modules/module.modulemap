@@ -1,8 +1,0 @@
-framework module "Sample" {
-	header "ref.h"
-    header "Sample.objc.h"
-    header "Universe.objc.h"
-    header "Sample.h"
-
-    export *
-}
