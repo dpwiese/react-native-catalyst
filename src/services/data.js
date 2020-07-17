@@ -73,3 +73,9 @@ export function calcRestRecoveryIntervalsFromCharacteristic(byteArray: Uint8Arra
     return (byteArray[offsetRrValues] << 8) | byteArray[offsetRrValues + 1];
   }
 }
+
+export function byteArrayToHexString(byteArray) {
+  return Array.from(byteArray, function(byte) {
+    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+  }).join('')
+}
