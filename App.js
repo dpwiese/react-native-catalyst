@@ -18,14 +18,17 @@ import {
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
 import Button from './src/components/Button';
-import { BleUuid } from './src/constants/bluetooth';
+import { BleUuid, CUSTOM_DEVICE_NAME } from './src/constants/bluetooth';
 import {
   base64ToByteArray,
   calcEnergyExpendedFromCharacteristic,
   calcHeartRateFromCharacteristic,
   calcRestRecoveryIntervalsFromCharacteristic,
-  parseHeartRateFromCharacteristic
+  parseHeartRateFromCharacteristic,
+  byteArrayToHexString,
 } from './src/services/data';
+
+import {decode as atob, encode as btoa} from 'base-64'
 
 const base64 = require('base-64');
 
@@ -41,7 +44,10 @@ class App extends Component {
     super();
     this.manager = new BleManager();
     this.state = {
+      hrmDevice: null,
       device: null,
+      services: null,
+      monitorResponse: null,
     };
   }
 
@@ -54,7 +60,7 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    console.log("MOUNTED");
+    console.log("Component mounted");
     const subscription = this.manager.onStateChange((state) => {
       if (state === 'PoweredOn') {
         subscription.remove();
@@ -62,11 +68,11 @@ class App extends Component {
     }, true);
   }
 
-  scanAndConnect = () => {
+  scanAndConnectToHrm = () => {
     this.manager.startDeviceScan(null, null, (error, device) => {
-      console.log("SCANNING!");
+      console.log("Scanning for HRM");
       if (error) {
-        // Handle error (scanning will be stopped automatically)
+        console.log(error);
         return
       }
 
@@ -75,7 +81,8 @@ class App extends Component {
         this.manager.stopDeviceScan();
         device.connect()
           .then((device) => {
-            this.state.device = device;
+            console.log("Connected to HRM");
+            this.state.hrmDevice = device;
             return device.discoverAllServicesAndCharacteristics();
           })
           .then((device) => {
@@ -91,7 +98,7 @@ class App extends Component {
                 BleUuid.HEART_RATE_MEASUREMENT_CHARACTERISTIC,
                 (error, characteristic) => {
                   if (error) {
-                    console.log("error!");
+                    console.log(error);
                     return;
                   }
                   if (characteristic && characteristic.value) {
@@ -105,17 +112,109 @@ class App extends Component {
             }
           })
           .catch((error) => {
-            // Handle errors
+            console.log(error);
           });
       }
     });
   }
 
-  stopScanning = () => {
-    console.log("STOPPING SCANNING AND DISCONNECTING!");
+  stopScanningAndDisconnectFromHrm = () => {
+    console.log("Stopping scanning and disconnecting from HRM");
     this.manager.stopDeviceScan();
-    if (this.state.device) {
-      this.manager.cancelDeviceConnection(this.state.device.id);
+    device = this.state.hrmDevice;
+    if (device) {
+      device.cancelDeviceConnection();
+      this.state.hrmDevice = null;
+    }
+  }
+
+  scanAndConnect = () => {
+    console.log("Scanning and connecting");
+    this.manager.startDeviceScan(null, null, (error, device) => {
+      console.log(device.localName);
+      if (error) {
+        console.log(error);
+        return
+      }
+
+      if (device && device.localName == CUSTOM_DEVICE_NAME) {
+        this.manager.stopDeviceScan();
+        device.connect()
+          .then((device) => {
+            this.state.device = device;
+            console.log("Connected");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    })
+  }
+
+  discoverServices = () => {
+    console.log("Discovering and reading");
+    device = this.state.device;
+    if (device) {
+      device.discoverAllServicesAndCharacteristics()
+        .then((device) => {
+          return device.services();
+        })
+        .then((services) => {
+          this.state.services = services;
+          console.log("found services");
+          services.forEach(service => console.log(service.uuid));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  monitorCharacteristic = () => {
+    console.log("Monitoring characteristic");
+    device = this.state.device;
+    if (device) {
+      this.state.monitorResponse = device.monitorCharacteristicForService(
+        BleUuid.CUSTOM_SERVICE,
+        BleUuid.CUSTOM_RESPONSE_CHARACTERISTIC,
+        (error, characteristic) => {
+          if (error) {
+            console.log(error);
+            return;
+          }
+          if (characteristic && characteristic.value) {
+            console.log("Receiving response");
+            console.log(characteristic.value);
+            console.log(byteArrayToHexString(base64ToByteArray(characteristic.value)));
+          }
+        });
+    }
+  }
+
+  sendCommand = () => {
+    device = this.state.device;
+    if (device) {
+      console.log("Sending command")
+      const arr = new Uint8Array([1, 2, 3]);
+      val = btoa(String.fromCharCode.apply(null, arr));
+      device.writeCharacteristicWithoutResponseForService(BleUuid.CUSTOM_SERVICE, BleUuid.CUSTOM_REQUEST_CHARACTERISTIC, val);
+    }
+  }
+
+  stopScanning = () => {
+    console.log("Stopping scanning");
+    this.manager.stopDeviceScan();
+  }
+
+  disconnect = () => {
+    console.log("Disconnecting");
+    device = this.state.device;
+    if (device && device.isConnected()) {
+      device.cancelConnection();
+      this.state.device = null;
+    }
+  }
+
     }
   }
 
@@ -129,9 +228,17 @@ class App extends Component {
           style={styles.scrollView}>
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>React Native Catalyst</Text>
-              <Button onPress={this.runNativeComuptation} text={"NATIVE"}/>
-              <Button onPress={this.scanAndConnect} text={"SCAN AND CONNECT"}/>
+              <Text style={styles.sectionTitle}>Run Native Computation</Text>
+              <Button onPress={this.runNativeComuptation} text={"Run Native Computation"}/>
+              <Text style={styles.sectionTitle}>Heart Rate</Text>
+              <Button onPress={this.scanAndConnectToHrm} text={"Scan and Connect"}/>
+              <Button onPress={this.stopScanningAndDisconnectFromHrm} text={"Stop Scanning and Disconnect"}/>
+              <Text style={styles.sectionTitle}>Custom Device</Text>
+              <Button onPress={this.scanAndConnect} text={"Scan and Connect"}/>
+              <Button onPress={this.discoverServices} text={"Discover Services"}/>
+              <Button onPress={this.monitorCharacteristic} text={"Monitor Characteristic"}/>
+              <Button onPress={this.sendCommand} text={"Send Command"}/>
+              <Button onPress={this.disconnect} text={"Disconnect"}/>
               <Button onPress={this.stopScanning} text={"STOP SCANNING"}/>
             </View>
           </View>
