@@ -34,8 +34,9 @@ target 'ReactNativeCatalyst' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  # Can remove MultiplatformBleAdapter once react-native-ble-plx is used in package.json from production release
+  pod 'MultiplatformBleAdapter', :git => 'git@github.com:dpwiese/MultiPlatformBleAdapter.git', :commit => 'e1cc5411167147804225a8141c294a8795ddfc36'
   pod 'react-native-ble-plx', :path => '../node_modules/react-native-ble-plx'
-  pod 'react-native-ble-plx-swift', :path => '../node_modules/react-native-ble-plx'
 
   target 'ReactNativeCatalystTests' do
     inherit! :complete

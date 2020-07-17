@@ -239,7 +239,7 @@ class App extends Component {
               <Button onPress={this.monitorCharacteristic} text={"Monitor Characteristic"}/>
               <Button onPress={this.sendCommand} text={"Send Command"}/>
               <Button onPress={this.disconnect} text={"Disconnect"}/>
-              <Button onPress={this.stopScanning} text={"STOP SCANNING"}/>
+              <Button onPress={this.stopScanning} text={"Stop Scanning"}/>
             </View>
           </View>
         </ScrollView>
