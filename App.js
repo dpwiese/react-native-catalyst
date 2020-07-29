@@ -143,6 +143,8 @@ class App extends Component {
           .then((device) => {
             this.state.device = device;
             console.log("Connected");
+            // console.log(device.mtu);
+            // return device.discoverAllServicesAndCharacteristics();
           })
           .catch((error) => {
             console.log(error);
@@ -163,6 +165,34 @@ class App extends Component {
           this.state.services = services;
           console.log("found services");
           services.forEach(service => console.log(service.uuid));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  readBondManagementCharacteristic = () => {
+    device = this.state.device;
+    services = this.state.services;
+    if (device) {
+      device.readCharacteristicForService(BleUuid.BOND_MANAGEMENT_SERVICE, BleUuid.BOND_MANAGEMENT_FEATURE_CHARACTERISTIC)
+        .then((characteristic) => {
+          console.log(characteristic.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  readHrCharacteristic = () => {
+    device = this.state.device;
+    services = this.state.services;
+    if (device) {
+      device.readCharacteristicForService(BleUuid.HEART_RATE_DEVICE_INFORMATION_SERVICE, BleUuid.HEART_RATE_MANUFACTURER_NAME_CHARACTERISTIC)
+        .then((characteristic) => {
+          console.log(characteristic.value);
         })
         .catch((error) => {
           console.log(error);
@@ -215,6 +245,17 @@ class App extends Component {
     }
   }
 
+  clearAllBondsAndDisconnect = () => {
+    device = this.state.device;
+    if (device) {
+      const arr = new Uint8Array([0x06]);
+      val = btoa(String.fromCharCode.apply(null, arr));
+      device.writeCharacteristicWithoutResponseForService(BleUuid.BOND_MANAGEMENT_SERVICE, BleUuid.BOND_MANAGEMENT_CONTROL_POINT_CHARACTERISTIC, val);
+      if (this.state.monitorResponse) {
+        this.state.monitorResponse.remove();
+      }
+      device.cancelConnection();
+      this.state.device = null;
     }
   }
 
@@ -240,6 +281,10 @@ class App extends Component {
               <Button onPress={this.sendCommand} text={"Send Command"}/>
               <Button onPress={this.disconnect} text={"Disconnect"}/>
               <Button onPress={this.stopScanning} text={"Stop Scanning"}/>
+              <Text style={styles.sectionTitle}>More Stuff</Text>
+              <Button onPress={this.readBondManagementCharacteristic} text={"READ BOND MANAGEMENT CHARACTERISTIC"}/>
+              <Button onPress={this.readHrCharacteristic} text={"READ HR CHARACTERISTIC"}/>
+              <Button onPress={this.clearAllBondsAndDisconnect} text={"CLEAR ALL BONDS AND DISCONNECT"}/>
             </View>
           </View>
         </ScrollView>

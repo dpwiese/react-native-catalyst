@@ -10,6 +10,12 @@ export function calcHeartRateFromCharacteristic(byteArray: Uint8Array) {
   return byteArray[1];
 }
 
+// export function numberArrayToBase64String(arr: Array<number>): string {
+//   var buffer = new ArrayBuffer(arr.length*8);
+//   new Float64Array(buffer).set(arr);
+//   return btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+// }
+
 // Returns a byte array representing each 8 bits of the base-64 value read left to right
 export function base64ToByteArray(base64String: string): Uint8Array {
   // Convert base-64 ascii string to a byte string
@@ -79,3 +85,12 @@ export function byteArrayToHexString(byteArray) {
     return ('0' + (byte & 0xFF).toString(16)).slice(-2);
   }).join('')
 }
+
+byteArrayToLong = function(byteArray) {
+    var value = 0;
+    for ( var i = byteArray.length - 1; i >= 0; i--) {
+        value = (value * 256) + byteArray[i];
+    }
+
+    return value;
+};
