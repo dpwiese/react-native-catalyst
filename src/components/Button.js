@@ -2,20 +2,23 @@
  * @flow
  */
 
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     height: 30,
     margin: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
-    color: 'white',
+    color: "white",
+  },
+  row: {
+    flexDirection: "row",
   },
 });
 
@@ -25,8 +28,8 @@ type Props = {
 };
 
 const Button = (props: Props): React$Element<any> => (
-  <TouchableOpacity style={styles.container} onPress={props.onPress} >
-    <View style={{ flexDirection: 'row' }}>
+  <TouchableOpacity style={styles.container} onPress={props.onPress}>
+    <View style={styles.row}>
       <Text style={styles.text}>{props.text}</Text>
     </View>
   </TouchableOpacity>

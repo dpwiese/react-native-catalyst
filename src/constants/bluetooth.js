@@ -1,8 +1,8 @@
-const BASE_UUID_PREFIX = '0000';
-const BASE_UUID_SUFFIX = '0000-1000-8000-00805f9b34fb';
+const BASE_UUID_PREFIX = "0000";
+const BASE_UUID_SUFFIX = "0000-1000-8000-00805f9b34fb";
 
-const CUSTOM_UUID_PREFIX = '0000';
-const CUSTOM_UUID_SUFFIX = '0000-1000-8000-00805f9b34fb';
+const CUSTOM_UUID_PREFIX = "0000";
+const CUSTOM_UUID_SUFFIX = "0000-1000-8000-00805f9b34fb";
 
 export const BleUuid = {
   // Heart rate service and characteristics

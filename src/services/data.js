@@ -1,9 +1,11 @@
 export function calcHeartRateFromCharacteristic(byteArray: Uint8Array) {
   // The first bit of the first byte indicates format of heart rate measurement
+  // eslint-disable-next-line no-bitwise
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
 
   // 8 bit format: take byte [1], 16 bit format: take bytes [1] and [2] and bitshift
   if (hrValueFormat16bit) {
+    // eslint-disable-next-line no-bitwise
     return (byteArray[1] << 8) | byteArray[2];
   }
 
@@ -31,11 +33,13 @@ export function base64ToByteArray(base64String: string): Uint8Array {
 }
 
 export function parseHeartRateFromCharacteristic(byteArray: Uint8Array) {
+  /* eslint-disable no-bitwise */
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
-  const contactSupported: boolean = (byteArray[0] >> 1 & 1) === 1;
-  const contactDetected: boolean = (byteArray[0] >> 2 & 1) === 1;
-  const energyExpendedPresent: boolean = (byteArray[0] >> 3 & 1) === 1;
-  const rrValuesPresent: boolean = (byteArray[0] >> 4 & 1) === 1;
+  const contactSupported: boolean = ((byteArray[0] >> 1) & 1) === 1;
+  const contactDetected: boolean = ((byteArray[0] >> 2) & 1) === 1;
+  const energyExpendedPresent: boolean = ((byteArray[0] >> 3) & 1) === 1;
+  const rrValuesPresent: boolean = ((byteArray[0] >> 4) & 1) === 1;
+  /* eslint-enable no-bitwise */
 
   console.log("---------------------------------------------------");
   console.log("Full characteristic value:                   " + byteArray);
@@ -48,49 +52,58 @@ export function parseHeartRateFromCharacteristic(byteArray: Uint8Array) {
 
 export function calcEnergyExpendedFromCharacteristic(byteArray: Uint8Array) {
   // The first bit of the first byte indicates format of heart rate measurement
+  // eslint-disable-next-line no-bitwise
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
 
   // The first bit of the first byte indicates presence of energy expended field
-  const energyExpendedPresent: boolean = (byteArray[0] >> 3 & 1) === 1;
+  // eslint-disable-next-line no-bitwise
+  const energyExpendedPresent: boolean = ((byteArray[0] >> 3) & 1) === 1;
 
   if (energyExpendedPresent) {
     if (hrValueFormat16bit) {
+      // eslint-disable-next-line no-bitwise
       return (byteArray[3] << 8) | byteArray[4];
     }
+    // eslint-disable-next-line no-bitwise
     return (byteArray[2] << 8) | byteArray[3];
   }
 }
 
 export function calcRestRecoveryIntervalsFromCharacteristic(byteArray: Uint8Array) {
   // The first bit of the first byte indicates format of heart rate measurement
+  // eslint-disable-next-line no-bitwise
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
 
   // The fourth bit of the first byte indicates presence of energy expended field
-  const energyExpendedPresent: boolean = (byteArray[0] >> 3 & 1) === 1;
+  // eslint-disable-next-line no-bitwise
+  const energyExpendedPresent: boolean = ((byteArray[0] >> 3) & 1) === 1;
 
   // The fifth bit of the first byte indicates presence of RR intervals
-  const rrValuesPresent: boolean = (byteArray[0] >> 4 & 1) === 1;
+  // eslint-disable-next-line no-bitwise
+  const rrValuesPresent: boolean = ((byteArray[0] >> 4) & 1) === 1;
 
   const lengthHrValues: number = hrValueFormat16bit ? 2 : 1;
   const lengthEnergyExpendedValues: number = energyExpendedPresent ? 2 : 0;
   const offsetRrValues: number = 1 + lengthHrValues + lengthEnergyExpendedValues;
 
   if (rrValuesPresent) {
+    // eslint-disable-next-line no-bitwise
     return (byteArray[offsetRrValues] << 8) | byteArray[offsetRrValues + 1];
   }
 }
 
 export function byteArrayToHexString(byteArray) {
-  return Array.from(byteArray, function(byte) {
-    return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-  }).join('')
+  return Array.from(byteArray, function (byte) {
+    // eslint-disable-next-line no-bitwise
+    return ("0" + (byte & 0xff).toString(16)).slice(-2);
+  }).join("");
 }
 
-byteArrayToLong = function(byteArray) {
-    var value = 0;
-    for ( var i = byteArray.length - 1; i >= 0; i--) {
-        value = (value * 256) + byteArray[i];
-    }
+// const byteArrayToLong = function (byteArray) {
+//   var value = 0;
+//   for (var i = byteArray.length - 1; i >= 0; i--) {
+//     value = value * 256 + byteArray[i];
+//   }
 
-    return value;
-};
+//   return value;
+// };
