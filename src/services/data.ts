@@ -1,4 +1,7 @@
-export function calcHeartRateFromCharacteristic(byteArray: Uint8Array) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const globalAny: any = global;
+
+export function calcHeartRateFromCharacteristic(byteArray: Uint8Array): number {
   // The first bit of the first byte indicates format of heart rate measurement
   // eslint-disable-next-line no-bitwise
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
@@ -21,7 +24,7 @@ export function calcHeartRateFromCharacteristic(byteArray: Uint8Array) {
 // Returns a byte array representing each 8 bits of the base-64 value read left to right
 export function base64ToByteArray(base64String: string): Uint8Array {
   // Convert base-64 ascii string to a byte string
-  const byteString: string = global.atob(base64String);
+  const byteString: string = globalAny.atob(base64String);
 
   // Create empty uint-8 typed array with length equal to the byte string
   const byteArray: Uint8Array = new Uint8Array(byteString.length);
@@ -32,7 +35,7 @@ export function base64ToByteArray(base64String: string): Uint8Array {
   return byteArray;
 }
 
-export function parseHeartRateFromCharacteristic(byteArray: Uint8Array) {
+export function parseHeartRateFromCharacteristic(byteArray: Uint8Array): void {
   /* eslint-disable no-bitwise */
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
   const contactSupported: boolean = ((byteArray[0] >> 1) & 1) === 1;
@@ -50,7 +53,7 @@ export function parseHeartRateFromCharacteristic(byteArray: Uint8Array) {
   console.log("flag[4] RR-Interval values present:          " + rrValuesPresent);
 }
 
-export function calcEnergyExpendedFromCharacteristic(byteArray: Uint8Array) {
+export function calcEnergyExpendedFromCharacteristic(byteArray: Uint8Array): number | void {
   // The first bit of the first byte indicates format of heart rate measurement
   // eslint-disable-next-line no-bitwise
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
@@ -69,7 +72,7 @@ export function calcEnergyExpendedFromCharacteristic(byteArray: Uint8Array) {
   }
 }
 
-export function calcRestRecoveryIntervalsFromCharacteristic(byteArray: Uint8Array) {
+export function calcRestRecoveryIntervalsFromCharacteristic(byteArray: Uint8Array): number | void {
   // The first bit of the first byte indicates format of heart rate measurement
   // eslint-disable-next-line no-bitwise
   const hrValueFormat16bit: boolean = (byteArray[0] & 1) === 1;
@@ -92,7 +95,7 @@ export function calcRestRecoveryIntervalsFromCharacteristic(byteArray: Uint8Arra
   }
 }
 
-export function byteArrayToHexString(byteArray) {
+export function byteArrayToHexString(byteArray: Uint8Array): string {
   return Array.from(byteArray, function (byte) {
     // eslint-disable-next-line no-bitwise
     return ("0" + (byte & 0xff).toString(16)).slice(-2);

@@ -1,14 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
+import { BleManager, Device, Service, Subscription } from "react-native-ble-plx";
 import { BleUuid, CUSTOM_DEVICE_NAME } from "./src/constants/bluetooth";
 import { NativeModules, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 import base64, { decode as _atob, encode as btoa } from "base-64";
 import {
   base64ToByteArray,
@@ -17,18 +10,46 @@ import {
   calcHeartRateFromCharacteristic,
   calcRestRecoveryIntervalsFromCharacteristic,
 } from "./src/services/data";
-import { BleManager } from "react-native-ble-plx";
 import Button from "./src/components/Button";
 
-if (!global.atob) {
-  global.atob = base64.decode;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const globalAny: any = global;
+
+if (!globalAny.atob) {
+  globalAny.atob = base64.decode;
 }
 
 const Computation = NativeModules.Computation;
 
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: "white",
+  },
+  body: {
+    backgroundColor: "white",
+  },
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: "black",
+  },
+});
+
 class App extends Component {
-  constructor() {
-    super();
+  manager: BleManager;
+  state: {
+    hrmDevice: Device | null;
+    device: Device | null;
+    services: Service[] | null;
+    monitorResponse: Subscription | null;
+  };
+
+  constructor(props: {}) {
+    super(props);
     this.manager = new BleManager();
     this.state = {
       hrmDevice: null,
@@ -38,15 +59,15 @@ class App extends Component {
     };
   }
 
-  nativeCallback = (out) => {
+  nativeCallback = (out: string): void => {
     console.log(out);
   };
 
-  runNativeComuptation = () => {
+  runNativeComuptation = (): void => {
     Computation.concatenateStrings("hello", "world", this.nativeCallback);
   };
 
-  componentDidMount = () => {
+  componentDidMount = (): void => {
     console.log("Component mounted");
     const subscription = this.manager.onStateChange((state) => {
       if (state === "PoweredOn") {
@@ -55,11 +76,16 @@ class App extends Component {
     }, true);
   };
 
-  scanAndConnectToHrm = () => {
+  scanAndConnectToHrm = (): void => {
     this.manager.startDeviceScan(null, null, (error, device) => {
       console.log("Scanning for HRM");
       if (error) {
         console.log(error);
+        return;
+      }
+
+      if (!device) {
+        console.log("Scanned device is null");
         return;
       }
 
@@ -107,20 +133,19 @@ class App extends Component {
     });
   };
 
-  stopScanningAndDisconnectFromHrm = () => {
+  stopScanningAndDisconnectFromHrm = (): void => {
     console.log("Stopping scanning and disconnecting from HRM");
     this.manager.stopDeviceScan();
     const device = this.state.hrmDevice;
     if (device) {
-      device.cancelDeviceConnection();
+      device.cancelConnection();
       this.state.hrmDevice = null;
     }
   };
 
-  scanAndConnect = () => {
+  scanAndConnect = (): void => {
     console.log("Scanning and connecting");
     this.manager.startDeviceScan(null, null, (error, device) => {
-      console.log(device.localName);
       if (error) {
         console.log(error);
         return;
@@ -143,7 +168,7 @@ class App extends Component {
     });
   };
 
-  discoverServices = () => {
+  discoverServices = (): void => {
     console.log("Discovering and reading");
     const device = this.state.device;
     if (device) {
@@ -163,7 +188,7 @@ class App extends Component {
     }
   };
 
-  readBondManagementCharacteristic = () => {
+  readBondManagementCharacteristic = (): void => {
     const device = this.state.device;
     if (device) {
       device
@@ -177,7 +202,7 @@ class App extends Component {
     }
   };
 
-  readHrCharacteristic = () => {
+  readHrCharacteristic = (): void => {
     const device = this.state.device;
     if (device) {
       device
@@ -194,7 +219,7 @@ class App extends Component {
     }
   };
 
-  monitorCharacteristic = () => {
+  monitorCharacteristic = (): void => {
     console.log("Monitoring characteristic");
     const device = this.state.device;
     if (device) {
@@ -216,12 +241,12 @@ class App extends Component {
     }
   };
 
-  sendCommand = () => {
+  sendCommand = (): void => {
     const device = this.state.device;
     if (device) {
       console.log("Sending command");
       const arr = new Uint8Array([1, 2, 3]);
-      const val = btoa(String.fromCharCode.apply(null, arr));
+      const val = btoa(String.fromCharCode.apply(null, Array.from(arr)));
       device.writeCharacteristicWithoutResponseForService(
         BleUuid.CUSTOM_SERVICE,
         BleUuid.CUSTOM_REQUEST_CHARACTERISTIC,
@@ -230,12 +255,12 @@ class App extends Component {
     }
   };
 
-  stopScanning = () => {
+  stopScanning = (): void => {
     console.log("Stopping scanning");
     this.manager.stopDeviceScan();
   };
 
-  disconnect = () => {
+  disconnect = (): void => {
     console.log("Disconnecting");
     const device = this.state.device;
     if (device && device.isConnected()) {
@@ -244,11 +269,11 @@ class App extends Component {
     }
   };
 
-  clearAllBondsAndDisconnect = () => {
+  clearAllBondsAndDisconnect = (): void => {
     const device = this.state.device;
     if (device) {
       const arr = new Uint8Array([0x06]);
-      const val = btoa(String.fromCharCode.apply(null, arr));
+      const val = btoa(String.fromCharCode.apply(null, Array.from(arr)));
       device.writeCharacteristicWithoutResponseForService(
         BleUuid.BOND_MANAGEMENT_SERVICE,
         BleUuid.BOND_MANAGEMENT_CONTROL_POINT_CHARACTERISTIC,
@@ -262,7 +287,7 @@ class App extends Component {
     }
   };
 
-  render() {
+  render(): ReactNode {
     return (
       <>
         <StatusBar barStyle="dark-content" />
@@ -294,23 +319,5 @@ class App extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: "white",
-  },
-  body: {
-    backgroundColor: "white",
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "black",
-  },
-});
 
 export default App;

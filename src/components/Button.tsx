@@ -1,9 +1,5 @@
-/**
- * @flow
- */
-
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { ReactElement } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -23,11 +19,11 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  onPress: Function,
-  text?: string,
+  onPress: (event: GestureResponderEvent) => void;
+  text?: string;
 };
 
-const Button = (props: Props): React$Element<any> => (
+const Button = (props: Props): ReactElement => (
   <TouchableOpacity style={styles.container} onPress={props.onPress}>
     <View style={styles.row}>
       <Text style={styles.text}>{props.text}</Text>
