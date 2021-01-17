@@ -10,8 +10,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "base-64": "^0.1.0",
     "react": "16.11.0",
-    "react-native": "0.62.0"
+    "react-native": "0.62.0",
+    "react-native-ble-plx": "https://github.com/dpwiese/react-native-ble-plx.git#ad137a882d1b6bc7cf0f6e08ce06f7ab8224ad0f"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
