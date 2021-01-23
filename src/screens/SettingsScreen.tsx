@@ -1,7 +1,7 @@
-import { BleManager, Device, Service, Subscription } from "react-native-ble-plx";
+import { BleManager, Device, Subscription } from "react-native-ble-plx";
 import { BleUuid, CUSTOM_DEVICE_NAME } from "../constants/bluetooth";
 import { NativeModules, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React, { Component, ReactNode } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import {
   base64ToByteArray,
   byteArrayToHexString,
@@ -33,75 +33,63 @@ const styles = StyleSheet.create({
   },
 });
 
-class SettingsScreen extends Component {
-  manager: BleManager;
-  state: {
-    hrmDevice: Device | null;
-    device: Device | null;
-    services: Service[] | null;
-    monitorResponse: Subscription | null;
-  };
+const bleManager = new BleManager();
 
-  constructor(props: {}) {
-    super(props);
-    this.manager = new BleManager();
-    this.state = {
-      hrmDevice: null,
-      device: null,
-      services: null,
-      monitorResponse: null,
-    };
-  }
+export default (): ReactElement => {
+  const [device, setDevice] = useState<Device | null>();
+  const [hrmDevice, setHrmDevice] = useState<Device | null>();
+  // const [services, setServices] = useState<Service[] | null>([]);
+  const [monitorResponse, setMonitorResponse] = useState<Subscription | null>();
 
-  nativeCallback = (out: string): void => {
+  const nativeCallback = (out: string): void => {
     console.log(out);
   };
 
-  runNativeComuptation = (): void => {
-    Computation.concatenateStrings("hello", "world", this.nativeCallback);
+  const runNativeComuptation = (): void => {
+    Computation.concatenateStrings("hello", "world", nativeCallback);
   };
 
-  componentDidMount = (): void => {
+  useEffect(() => {
     console.log("Component mounted");
-    const subscription = this.manager.onStateChange((state) => {
+    const subscription = bleManager.onStateChange((state) => {
       if (state === "PoweredOn") {
         subscription.remove();
       }
     }, true);
-  };
+  }, []);
 
-  scanAndConnectToHrm = (): void => {
-    this.manager.startDeviceScan(null, null, (error, device) => {
+  const scanAndConnectToHrm = (): void => {
+    bleManager.startDeviceScan(null, null, (error, dev) => {
       console.log("Scanning for HRM");
       if (error) {
         console.log(error);
         return;
       }
 
-      if (!device) {
+      if (!dev) {
         console.log("Scanned device is null");
         return;
       }
 
       // Find a HRM and connect
-      if (device.serviceUUIDs && device.serviceUUIDs.includes(BleUuid.HEART_RATE_SERVICE)) {
-        this.manager.stopDeviceScan();
-        device
+      if (dev.serviceUUIDs && dev.serviceUUIDs.includes(BleUuid.HEART_RATE_SERVICE)) {
+        bleManager.stopDeviceScan();
+        dev
           .connect()
           .then((connectedDevice) => {
             console.log("Connected to HRM");
-            this.state.hrmDevice = connectedDevice;
-            return device.discoverAllServicesAndCharacteristics();
+            setHrmDevice(connectedDevice);
+            return dev.discoverAllServicesAndCharacteristics();
           })
           .then((connectedDevice) => {
-            return this.manager.characteristicsForDevice(connectedDevice.id, BleUuid.HEART_RATE_SERVICE);
+            return bleManager.characteristicsForDevice(connectedDevice.id, BleUuid.HEART_RATE_SERVICE);
           })
           .then((characteristics) => {
             if (characteristics && characteristics[0].uuid.includes(BleUuid.HEART_RATE_MEASUREMENT_CHARACTERISTIC)) {
-              console.log("Monitoring " + device.name);
+              console.log("Monitoring " + dev.name);
               console.log(BleUuid.HEART_RATE_SERVICE);
               console.log(BleUuid.HEART_RATE_MEASUREMENT_CHARACTERISTIC);
-              device.monitorCharacteristicForService(
+              dev.monitorCharacteristicForService(
                 BleUuid.HEART_RATE_SERVICE,
                 BleUuid.HEART_RATE_MEASUREMENT_CHARACTERISTIC,
                 (err, characteristic) => {
@@ -127,30 +115,29 @@ class SettingsScreen extends Component {
     });
   };
 
-  stopScanningAndDisconnectFromHrm = (): void => {
+  const stopScanningAndDisconnectFromHrm = (): void => {
     console.log("Stopping scanning and disconnecting from HRM");
-    this.manager.stopDeviceScan();
-    const device = this.state.hrmDevice;
-    if (device) {
-      device.cancelConnection();
-      this.state.hrmDevice = null;
+    bleManager.stopDeviceScan();
+    if (hrmDevice) {
+      hrmDevice.cancelConnection();
+      setHrmDevice(null);
     }
   };
 
-  scanAndConnect = (): void => {
+  const scanAndConnect = (): void => {
     console.log("Scanning and connecting");
-    this.manager.startDeviceScan(null, null, (error, device) => {
+    bleManager.startDeviceScan(null, null, (error, dev) => {
       if (error) {
         console.log(error);
         return;
       }
 
-      if (device && device.localName === CUSTOM_DEVICE_NAME) {
-        this.manager.stopDeviceScan();
-        device
+      if (dev && dev.localName === CUSTOM_DEVICE_NAME) {
+        bleManager.stopDeviceScan();
+        dev
           .connect()
           .then((connectedDevice) => {
-            this.state.device = connectedDevice;
+            setDevice(connectedDevice);
             console.log("Connected");
             // console.log(device.mtu);
             // return device.discoverAllServicesAndCharacteristics();
@@ -162,9 +149,8 @@ class SettingsScreen extends Component {
     });
   };
 
-  discoverServices = (): void => {
+  const discoverServices = (): void => {
     console.log("Discovering and reading");
-    const device = this.state.device;
     if (device) {
       device
         .discoverAllServicesAndCharacteristics()
@@ -172,7 +158,7 @@ class SettingsScreen extends Component {
           return connectedDevice.services();
         })
         .then((services) => {
-          this.state.services = services;
+          // setServices(services);
           console.log("found services");
           services.forEach((service) => console.log(service.uuid));
         })
@@ -182,8 +168,7 @@ class SettingsScreen extends Component {
     }
   };
 
-  readBondManagementCharacteristic = (): void => {
-    const device = this.state.device;
+  const readBondManagementCharacteristic = (): void => {
     if (device) {
       device
         .readCharacteristicForService(BleUuid.BOND_MANAGEMENT_SERVICE, BleUuid.BOND_MANAGEMENT_FEATURE_CHARACTERISTIC)
@@ -196,8 +181,7 @@ class SettingsScreen extends Component {
     }
   };
 
-  readHrCharacteristic = (): void => {
-    const device = this.state.device;
+  const readHrCharacteristic = (): void => {
     if (device) {
       device
         .readCharacteristicForService(
@@ -213,11 +197,10 @@ class SettingsScreen extends Component {
     }
   };
 
-  monitorCharacteristic = (): void => {
+  const monitorCharacteristic = (): void => {
     console.log("Monitoring characteristic");
-    const device = this.state.device;
     if (device) {
-      this.state.monitorResponse = device.monitorCharacteristicForService(
+      const res = device.monitorCharacteristicForService(
         BleUuid.CUSTOM_SERVICE,
         BleUuid.CUSTOM_RESPONSE_CHARACTERISTIC,
         (error, characteristic) => {
@@ -232,11 +215,11 @@ class SettingsScreen extends Component {
           }
         }
       );
+      setMonitorResponse(res);
     }
   };
 
-  sendCommand = (): void => {
-    const device = this.state.device;
+  const sendCommand = (): void => {
     if (device) {
       console.log("Sending command");
       const arr = new Uint8Array([1, 2, 3]);
@@ -249,22 +232,20 @@ class SettingsScreen extends Component {
     }
   };
 
-  stopScanning = (): void => {
+  const stopScanning = (): void => {
     console.log("Stopping scanning");
-    this.manager.stopDeviceScan();
+    bleManager.stopDeviceScan();
   };
 
-  disconnect = (): void => {
+  const disconnect = (): void => {
     console.log("Disconnecting");
-    const device = this.state.device;
     if (device && device.isConnected()) {
       device.cancelConnection();
-      this.state.device = null;
+      setDevice(null);
     }
   };
 
-  clearAllBondsAndDisconnect = (): void => {
-    const device = this.state.device;
+  const clearAllBondsAndDisconnect = (): void => {
     if (device) {
       const arr = new Uint8Array([0x06]);
       const val = btoa(String.fromCharCode.apply(null, Array.from(arr)));
@@ -273,42 +254,38 @@ class SettingsScreen extends Component {
         BleUuid.BOND_MANAGEMENT_CONTROL_POINT_CHARACTERISTIC,
         val
       );
-      if (this.state.monitorResponse) {
-        this.state.monitorResponse.remove();
+      if (monitorResponse) {
+        monitorResponse.remove();
       }
       device.cancelConnection();
-      this.state.device = null;
+      setDevice(null);
     }
   };
 
-  render(): ReactNode {
-    return (
-      <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Run Native Computation</Text>
-              <Button onPress={this.runNativeComuptation} text={"Run Native Computation"} />
-              <Text style={styles.sectionTitle}>Heart Rate</Text>
-              <Button onPress={this.scanAndConnectToHrm} text={"Scan and Connect"} />
-              <Button onPress={this.stopScanningAndDisconnectFromHrm} text={"Stop Scanning and Disconnect"} />
-              <Text style={styles.sectionTitle}>Custom Device</Text>
-              <Button onPress={this.scanAndConnect} text={"Scan and Connect"} />
-              <Button onPress={this.discoverServices} text={"Discover Services"} />
-              <Button onPress={this.monitorCharacteristic} text={"Monitor Characteristic"} />
-              <Button onPress={this.sendCommand} text={"Send Command"} />
-              <Button onPress={this.disconnect} text={"Disconnect"} />
-              <Button onPress={this.stopScanning} text={"Stop Scanning"} />
-              <Text style={styles.sectionTitle}>More Stuff</Text>
-              <Button onPress={this.readBondManagementCharacteristic} text={"READ BOND MANAGEMENT CHARACTERISTIC"} />
-              <Button onPress={this.readHrCharacteristic} text={"READ HR CHARACTERISTIC"} />
-              <Button onPress={this.clearAllBondsAndDisconnect} text={"CLEAR ALL BONDS AND DISCONNECT"} />
-            </View>
+  return (
+    <SafeAreaView>
+      <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
+        <View style={styles.body}>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Run Native Computation</Text>
+            <Button onPress={runNativeComuptation} text={"Run Native Computation"} />
+            <Text style={styles.sectionTitle}>Heart Rate</Text>
+            <Button onPress={scanAndConnectToHrm} text={"Scan and Connect"} />
+            <Button onPress={stopScanningAndDisconnectFromHrm} text={"Stop Scanning and Disconnect"} />
+            <Text style={styles.sectionTitle}>Custom Device</Text>
+            <Button onPress={scanAndConnect} text={"Scan and Connect"} />
+            <Button onPress={discoverServices} text={"Discover Services"} />
+            <Button onPress={monitorCharacteristic} text={"Monitor Characteristic"} />
+            <Button onPress={sendCommand} text={"Send Command"} />
+            <Button onPress={disconnect} text={"Disconnect"} />
+            <Button onPress={stopScanning} text={"Stop Scanning"} />
+            <Text style={styles.sectionTitle}>More Stuff</Text>
+            <Button onPress={readBondManagementCharacteristic} text={"READ BOND MANAGEMENT CHARACTERISTIC"} />
+            <Button onPress={readHrCharacteristic} text={"READ HR CHARACTERISTIC"} />
+            <Button onPress={clearAllBondsAndDisconnect} text={"CLEAR ALL BONDS AND DISCONNECT"} />
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-}
-
-export default SettingsScreen;
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
