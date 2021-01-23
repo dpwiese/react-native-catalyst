@@ -12,5 +12,7 @@ jest.mock("react-native-ble-plx");
 import renderer from "react-test-renderer";
 
 it("renders correctly", () => {
+  // https://github.com/facebook/jest/issues/6434#issuecomment-525576660
+  jest.useFakeTimers();
   renderer.create(<App />);
 });
