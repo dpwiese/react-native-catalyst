@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { BleManager, Device, Service, Subscription } from "react-native-ble-plx";
 import { BleUuid, CUSTOM_DEVICE_NAME } from "./src/constants/bluetooth";
 import { NativeModules, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
@@ -11,6 +12,7 @@ import {
   calcRestRecoveryIntervalsFromCharacteristic,
 } from "./src/services/data";
 import Button from "./src/components/Button";
+import { NavigationContainer } from '@react-navigation/native';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalAny: any = global;
@@ -289,7 +291,7 @@ class App extends Component {
 
   render(): ReactNode {
     return (
-      <>
+      <NavigationContainer>
         <StatusBar barStyle="dark-content" />
         <SafeAreaView>
           <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
@@ -315,7 +317,7 @@ class App extends Component {
             </View>
           </ScrollView>
         </SafeAreaView>
-      </>
+      </NavigationContainer>
     );
   }
 }

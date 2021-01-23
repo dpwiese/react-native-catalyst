@@ -10,10 +10,16 @@
     "lint": "eslint {src,__tests__,App.*} --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/native": "^5.9.2",
     "base-64": "^0.1.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-ble-plx": "https://github.com/dpwiese/react-native-ble-plx.git#ad137a882d1b6bc7cf0f6e08ce06f7ab8224ad0f"
+    "react-native-ble-plx": "https://github.com/dpwiese/react-native-ble-plx.git#ad137a882d1b6bc7cf0f6e08ce06f7ab8224ad0f",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-reanimated": "^1.13.2",
+    "react-native-safe-area-context": "^3.1.9",
+    "react-native-screens": "^2.15.2"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",
