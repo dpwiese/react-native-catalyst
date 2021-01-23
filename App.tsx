@@ -1,9 +1,9 @@
 import "react-native-gesture-handler";
+import React, { ReactElement } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import base64, { decode as _atob, encode as _btoa } from "base-64";
 import HomeScreen from "./src/screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 

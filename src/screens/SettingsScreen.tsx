@@ -1,9 +1,17 @@
 import { BleManager, Device, Service, Subscription } from "react-native-ble-plx";
 import { BleUuid, CUSTOM_DEVICE_NAME } from "../constants/bluetooth";
 import { NativeModules, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
+import {
+  base64ToByteArray,
+  byteArrayToHexString,
+  calcEnergyExpendedFromCharacteristic,
+  calcHeartRateFromCharacteristic,
+  calcRestRecoveryIntervalsFromCharacteristic,
+} from "../services/data";
 import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
+import { encode as btoa } from "base-64";
 
 const Computation = NativeModules.Computation;
 
