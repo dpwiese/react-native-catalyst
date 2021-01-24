@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import { WebView } from "react-native-webview";
 
-const chartJsHtml = require("../chart/indexWithJs.html");
+import chartJsHtml from "../chart/indexWithJs.html";
 
 const styles = StyleSheet.create({
   scrollView: {
