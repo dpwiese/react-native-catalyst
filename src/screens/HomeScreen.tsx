@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
 
 // TODO@dpwiese
 //  - Import Chart.js from separate .js file
-//  - Make it easier to pass chart options from RN side
 //  - Put all of this in nice wrapper?
 
 type DataPoint = {
@@ -45,7 +44,13 @@ export default (): ReactElement => {
 
   const chartConfig = JSON.stringify(require("../chart/chartConfig").chartConfig);
 
-  const addData = (): void => {
+  const addData = (data: DataPoint[]): void => {
+    // Update chart data
+    webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(data)};`);
+    webref?.injectJavaScript(`window.canvasLine.update();`);
+  };
+
+  const genData = (): void => {
     const newData = [];
     for (let i = 0; i < 500; i++) {
       newData.push({ x: num + i, y: (Math.random() * 100).toString() });
@@ -54,14 +59,15 @@ export default (): ReactElement => {
     if (allData.length > 1000) {
       allData.splice(0, allData.length - 1000);
     }
-    webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(allData)};`);
-    webref?.injectJavaScript(`window.canvasLine.update();`);
     setNum(num + 500);
+    addData(allData);
   };
 
-  const addChart = (): void => {
+  // Configure single chart with chartConfig
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const addChart = (config: any): void => {
     webref?.injectJavaScript(`const canvasEl = document.getElementById('canvasId');true;`);
-    webref?.injectJavaScript(`window.canvasLine = new Chart(canvasEl.getContext('2d'), ${chartConfig});true;`);
+    webref?.injectJavaScript(`window.canvasLine = new Chart(canvasEl.getContext('2d'), ${config});true;`);
   };
 
   return (
@@ -70,7 +76,7 @@ export default (): ReactElement => {
         <View style={styles.body}>
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Home</Text>
-            <Button onPress={addData} text={"Add Data"} />
+            <Button onPress={genData} text={"Add Data"} />
           </View>
           <WebView
             originWhitelist={["*"]}
@@ -78,7 +84,7 @@ export default (): ReactElement => {
               (webref = r)
             }
             source={chartJsHtml}
-            onLoadEnd={addChart}
+            onLoadEnd={(): void => addChart(chartConfig)}
           />
         </View>
       </ScrollView>
