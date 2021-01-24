@@ -27,10 +27,23 @@ export const chartConfig = {
     ],
   },
   options: {
+    animation: {
+      duration: 0,
+    },
+    responsive: true,
     plugins: {
       title: {
+        display: true,
         text: "My Title",
       },
+      tooltip: {
+        mode: "index",
+        intersect: false,
+      },
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
     },
     scales: {
       x: {
