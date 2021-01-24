@@ -2,80 +2,77 @@
   <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0-beta.8"></script>
   </head>
-
   <body>
+    <h1>INDEX HTML</h1>
     <canvas id="canvasId" height="200"></canvas>
-
     <script>
-      window.onload = function() {
-        const ticksOptions = {
-          autoSkipPadding: 100,
-          autoSkip: true,
-          minRotation: 0,
-          maxRotation: 0,
-        };
+      const ticksOptions = {
+        autoSkipPadding: 100,
+        autoSkip: true,
+        minRotation: 0,
+        maxRotation: 0,
+      };
 
-        const scaleLabelOptions = {
-          display: true,
-          labelString: 'X-Axis Label',
-        }
+      const scaleLabelOptions = {
+        display: true,
+        labelString: 'X-Axis Label',
+      }
 
-        const chartConfig = {
-          type: 'line',
-          data: {
-            datasets: [{
-              label: 'My Legend Label',
-              backgroundColor: 'rgb(224, 110, 60)',
-              borderColor: 'rgb(224, 110, 60)',
-              data: [],
-              fill: false,
-              pointRadius: 0,
-              lineTension: 0.1,
-              borderJoinStyle: "round",
-            }]
-          },
-          options: {
-            plugins: {
-              title: {
-                text: 'My Title',
-              },
+      const chartConfig = {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: 'My Legend Label',
+            backgroundColor: 'rgb(224, 110, 60)',
+            borderColor: 'rgb(224, 110, 60)',
+            data: [],
+            fill: false,
+            pointRadius: 0,
+            lineTension: 0.1,
+            borderJoinStyle: "round",
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              text: 'My Title',
             },
-            scales: {
-              x: {
-                type: "linear",
+          },
+          scales: {
+            x: {
+              type: "linear",
+              display: true,
+              scaleLabel: scaleLabelOptions,
+              ticks: ticksOptions,
+            },
+            y: {
+              display: true,
+              scaleLabel: {
                 display: true,
-                scaleLabel: scaleLabelOptions,
-                ticks: ticksOptions,
+                labelString: 'My Y-Axis Label'
               },
-              y: {
-                display: true,
-                scaleLabel: {
-                  display: true,
-                  labelString: 'My Y-Axis Label'
-                },
-              }
             }
           }
-        };
+        }
+      };
 
-        // Set tooltip timestamp
-        Chart.defaults.plugins.tooltip.mode = 'index';
-        Chart.defaults.plugins.tooltip.intersect = false;
+      // Set tooltip timestamp
+      Chart.defaults.plugins.tooltip.mode = 'index';
+      Chart.defaults.plugins.tooltip.intersect = false;
 
-        // Reponsive chart with title
-        Chart.defaults.responsive = true;
-        Chart.defaults.plugins.title.display = true;
+      // Reponsive chart with title
+      Chart.defaults.responsive = true;
+      Chart.defaults.plugins.title.display = true;
 
-        // Set hover
-        Chart.defaults.hover.mode = 'nearest';
-        Chart.defaults.hover.intersect = true;
+      // Set hover
+      Chart.defaults.hover.mode = 'nearest';
+      Chart.defaults.hover.intersect = true;
 
-        //
-        Chart.defaults.animation.duration = 0;
+      //
+      Chart.defaults.animation.duration = 0;
 
-        const canvasEl = document.getElementById('canvasId');
-        window.canvasLine = new Chart(canvasEl.getContext('2d'), chartConfig);
-      }
+      const canvasEl = document.getElementById('canvasId');
+      window.canvasLine = new Chart(canvasEl.getContext('2d'), chartConfig);
     </script>
   </body>
 </html>

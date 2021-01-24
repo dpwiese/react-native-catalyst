@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import { WebView } from "react-native-webview";
 
-const chartJsHtml = require('../chart/index.html')
+const chartJsHtml = require("../chart/indexWithJs.html");
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -27,8 +27,7 @@ const styles = StyleSheet.create({
 });
 
 // TODO@dpwiese
-//  - Use local copy of Chart.js, not getting from CDN
-//  - Put HTML in separate (HTML) file
+//  - Import Chart.js from separate .js file
 //  - Make it easier to pass chart options from RN side
 //  - Put all of this in nice wrapper?
 
