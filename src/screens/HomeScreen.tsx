@@ -43,6 +43,8 @@ export default (): ReactElement => {
 
   let webref: WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null;
 
+  const chartConfig = JSON.stringify(require("../chart/chartConfig").chartConfig);
+
   const addData = (): void => {
     const newData = [];
     for (let i = 0; i < 500; i++) {
@@ -55,6 +57,11 @@ export default (): ReactElement => {
     webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(allData)};`);
     webref?.injectJavaScript(`window.canvasLine.update();`);
     setNum(num + 500);
+  };
+
+  const addChart = (): void => {
+    webref?.injectJavaScript(`const canvasEl = document.getElementById('canvasId');true;`);
+    webref?.injectJavaScript(`window.canvasLine = new Chart(canvasEl.getContext('2d'), ${chartConfig});true;`);
   };
 
   return (
@@ -71,6 +78,7 @@ export default (): ReactElement => {
               (webref = r)
             }
             source={chartJsHtml}
+            onLoadEnd={addChart}
           />
         </View>
       </ScrollView>
