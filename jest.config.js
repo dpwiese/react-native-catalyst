@@ -7,4 +7,7 @@ module.exports = {
   setupFiles: [
     './node_modules/react-native-gesture-handler/jestSetup.js',
   ],
+  moduleNameMapper: {
+    "\\.(html)$": "<rootDir>/__mocks__/fileMock.js",
+  }
 };

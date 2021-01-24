@@ -4,7 +4,8 @@ import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import { WebView } from "react-native-webview";
 
-import chartJsHtml from "../chart/indexWithJs.html";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const chartJsHtml = require("../chart/index.html");
 
 const styles = StyleSheet.create({
   scrollView: {
