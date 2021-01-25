@@ -3,8 +3,7 @@ import React, { ReactElement, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
-
-const chartConfig = require("../chart/chartConfig").chartConfig;
+import { chartConfig } from "../chart/chartConfig";
 
 const styles = StyleSheet.create({
   scrollView: {
