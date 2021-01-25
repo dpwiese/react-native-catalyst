@@ -24,27 +24,31 @@ const styles = StyleSheet.create({
   },
 });
 
+const initialData: DataPoint[] = [];
+
 type AddData = {
   addData: (data: DataPoint[]) => void;
 };
 
 export default (): ReactElement => {
   const [num, setNum] = useState(0);
-  const [allData, setAllData] = useState<DataPoint[]>([]);
+  const [allData, setAllData] = useState<DataPoint[]>(initialData);
   const addDataRef = useRef<AddData>();
 
   const genData = (): void => {
+    const increment = 500;
+    const maxLength = 1500;
     const newData = [];
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < increment; i++) {
       newData.push({ x: num + i, y: (Math.random() * 100).toString() });
     }
     setAllData(allData.concat(newData));
-    if (allData.length > 1000) {
-      allData.splice(0, allData.length - 1000);
+    if (allData.length > maxLength) {
+      allData.splice(0, allData.length - maxLength);
     }
-    setNum(num + 500);
+    setNum(num + increment);
     // Pass fake data to ChartJs component
-    addDataRef.current?.addData(allData);
+    addDataRef.current?.addData(allData.concat(newData));
   };
 
   return (
@@ -55,7 +59,7 @@ export default (): ReactElement => {
             <Text style={styles.sectionTitle}>Home</Text>
             <Button onPress={genData} text={"Add Data"} />
           </View>
-          <ChartJs ref={addDataRef} />
+          <ChartJs data={initialData} ref={addDataRef} />
         </View>
       </ScrollView>
     </SafeAreaView>

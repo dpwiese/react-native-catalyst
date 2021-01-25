@@ -19,8 +19,12 @@ export type DataPoint = {
   y: string;
 };
 
+type Props = {
+  data: DataPoint[];
+};
+
 export default forwardRef(
-  (props: {}, ref): ReactElement => {
+  (props: Props, ref): ReactElement => {
     let webref: WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null;
 
     const chartConfig = JSON.stringify(require("./chartConfig").chartConfig);
@@ -32,12 +36,14 @@ export default forwardRef(
       webref?.injectJavaScript(`window.canvasLine = new Chart(canvasEl.getContext('2d'), ${config});true;`);
     };
 
+    const addData = (data: DataPoint[]): void => {
+      // Update chart data
+      webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(data)};`);
+      webref?.injectJavaScript(`window.canvasLine.update();`);
+    };
+
     useImperativeHandle(ref, () => ({
-      addData(data: DataPoint[]): void {
-        // Update chart data
-        webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(data)};`);
-        webref?.injectJavaScript(`window.canvasLine.update();`);
-      },
+      addData,
     }));
 
     return (
@@ -50,6 +56,7 @@ export default forwardRef(
           source={chartJsHtml}
           onLoadEnd={(): void => {
             addChart(chartConfig);
+            addData(props.data);
           }}
         />
       </View>
