@@ -1,4 +1,4 @@
-import React, { ReactElement, forwardRef, useImperativeHandle } from "react";
+import React, { ReactElement } from "react";
 import { StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 
@@ -21,45 +21,37 @@ export type DataPoint = {
 
 type Props = {
   data: DataPoint[];
+  chartConfig: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
-export default forwardRef(
-  (props: Props, ref): ReactElement => {
-    let webref: WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null;
+let webref: WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null;
 
-    const chartConfig = JSON.stringify(require("./chartConfig").chartConfig);
+export const addData = (data: DataPoint[]): void => {
+  // Update chart data
+  webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(data)};`);
+  webref?.injectJavaScript(`window.canvasLine.update();`);
+};
 
-    // Configure single chart with chartConfig
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const addChart = (config: any): void => {
-      webref?.injectJavaScript(`const canvasEl = document.getElementById('canvasId');true;`);
-      webref?.injectJavaScript(`window.canvasLine = new Chart(canvasEl.getContext('2d'), ${config});true;`);
-    };
+export default (props: Props): ReactElement => {
+  const chartConfig = JSON.stringify(props.chartConfig);
+  // Configure single chart with chartConfig
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const addChart = (config: any): void => {
+    webref?.injectJavaScript(`const canvasEl = document.getElementById('canvasId');true;`);
+    webref?.injectJavaScript(`window.canvasLine = new Chart(canvasEl.getContext('2d'), ${config});true;`);
+  };
 
-    const addData = (data: DataPoint[]): void => {
-      // Update chart data
-      webref?.injectJavaScript(`window.canvasLine.config.data.datasets[0].data = ${JSON.stringify(data)};`);
-      webref?.injectJavaScript(`window.canvasLine.update();`);
-    };
-
-    useImperativeHandle(ref, () => ({
-      addData,
-    }));
-
-    return (
-      <View style={styles.container}>
-        <WebView
-          originWhitelist={["*"]}
-          ref={(r): WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null =>
-            (webref = r)
-          }
-          source={chartJsHtml}
-          onLoadEnd={(): void => {
-            addChart(chartConfig);
-            addData(props.data);
-          }}
-        />
-      </View>
-    );
-  }
-);
+  return (
+    <View style={styles.container}>
+      <WebView
+        originWhitelist={["*"]}
+        ref={(r): WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null => (webref = r)}
+        source={chartJsHtml}
+        onLoadEnd={(): void => {
+          addChart(chartConfig);
+          addData(props.data);
+        }}
+      />
+    </View>
+  );
+};

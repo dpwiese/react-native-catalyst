@@ -1,8 +1,10 @@
-import ChartJs, { DataPoint } from "../chart/ChartJs";
-import React, { ReactElement, useRef, useState } from "react";
+import ChartJs, { DataPoint, addData } from "../chart/ChartJs";
+import React, { ReactElement, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
+
+const chartConfig = require("../chart/chartConfig").chartConfig;
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -24,16 +26,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const initialData: DataPoint[] = [];
 
-type AddData = {
-  addData: (data: DataPoint[]) => void;
-};
+const initialData: DataPoint[] = [];
 
 export default (): ReactElement => {
   const [num, setNum] = useState(0);
   const [allData, setAllData] = useState<DataPoint[]>(initialData);
-  const addDataRef = useRef<AddData>();
 
   const genData = (): void => {
     const increment = 500;
@@ -48,7 +46,7 @@ export default (): ReactElement => {
     }
     setNum(num + increment);
     // Pass fake data to ChartJs component
-    addDataRef.current?.addData(allData.concat(newData));
+    addData(allData.concat(newData));
   };
 
   return (
@@ -59,7 +57,7 @@ export default (): ReactElement => {
             <Text style={styles.sectionTitle}>Home</Text>
             <Button onPress={genData} text={"Add Data"} />
           </View>
-          <ChartJs data={initialData} ref={addDataRef} />
+          <ChartJs data={initialData} chartConfig={chartConfig} />
         </View>
       </ScrollView>
     </SafeAreaView>
