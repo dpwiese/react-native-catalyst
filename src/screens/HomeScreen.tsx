@@ -1,4 +1,4 @@
-import ChartJs, { DataPoint, addData } from "../chart/ChartJs";
+import ChartJs, { DataPoint, setData } from "../chart/ChartJs";
 import React, { ReactElement, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
@@ -45,7 +45,7 @@ export default (): ReactElement => {
     }
     setNum(num + increment);
     // Pass fake data to ChartJs component
-    addData(allData.concat(newData));
+    setData(allData.concat(newData));
   };
 
   return (
@@ -56,7 +56,7 @@ export default (): ReactElement => {
             <Text style={styles.sectionTitle}>Home</Text>
             <Button onPress={genData} text={"Add Data"} />
           </View>
-          <ChartJs data={initialData} chartConfig={chartConfig} />
+          <ChartJs config={chartConfig} data={initialData} />
         </View>
       </ScrollView>
     </SafeAreaView>
