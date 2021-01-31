@@ -1,4 +1,4 @@
-import { DataPoint } from "../chart/ChartJs";
+import { DataPoint } from "@dpwiese/react-native-canvas-charts";
 
 const ticksOptions = {
   autoSkipPadding: 100,
