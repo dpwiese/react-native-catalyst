@@ -1,4 +1,4 @@
-import ChartJs, { DataPoint, SetData } from "../chart/ChartJs";
+import { ChartJs, DataPoint, SetData } from "@dpwiese/react-native-canvas-charts";
 import React, { ReactElement, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
@@ -57,7 +57,6 @@ export default (): ReactElement => {
       allData.splice(0, allData.length - maxLength);
     }
     setNum(num + increment);
-    console.log(allData.length);
     // Pass fake data to ChartJs component
     setDataRef.current?.setData([allData.concat(newData)]);
   };
