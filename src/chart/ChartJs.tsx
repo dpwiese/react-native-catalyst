@@ -39,10 +39,6 @@ type Props = {
 
 export default forwardRef(
   (props: Props, ref): ReactElement => {
-    // React.useEffect(() => {
-    //   setData(props.dataSets)
-    // }, [props.dataSets]);
-
     let webref: WebView<{ originWhitelist: string[]; ref: unknown; source: { html: string } }> | null;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
