@@ -36,7 +36,7 @@ const yTickOptions = {
   },
 };
 
-export const chartConfig2 = {
+export const chartConfig1 = {
   type: "line",
   data: {
     datasets: [
@@ -44,16 +44,6 @@ export const chartConfig2 = {
         label: "My Legend Label",
         backgroundColor: "rgb(224, 110, 60)",
         borderColor: "rgb(224, 110, 60)",
-        data: [] as DataPoint[],
-        fill: false,
-        pointRadius: 0,
-        lineTension: 0.1,
-        borderJoinStyle: "round",
-      },
-      {
-        label: "My Legend Label",
-        backgroundColor: "rgb(60, 110, 222)",
-        borderColor: "rgb(60, 110, 222)",
         data: [] as DataPoint[],
         fill: false,
         pointRadius: 0,
