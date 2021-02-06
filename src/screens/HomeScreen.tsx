@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
-    height: 100,
+    height: 40,
   },
   sectionTitle: {
     fontSize: 24,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   chart: {
-    height: 500,
+    height: 370,
   },
 });
 
