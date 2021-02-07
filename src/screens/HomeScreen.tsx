@@ -1,6 +1,7 @@
-import { ChartJs, DataPoint, SetData } from "@dpwiese/react-native-canvas-charts";
+import { SetData as CSetData, ChartJs as Chart, DataPoint } from "@dpwiese/react-native-canvas-charts";
 import React, { ReactElement, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import { UPlot, SetData as USetData } from "./UPlot/UPlot";
 import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import { chartConfig1 } from "../chart/chartConfig1";
@@ -41,12 +42,40 @@ const initialData2: DataPoint[] = [
   { x: 3, y: 4 },
 ];
 
+const opts = {
+  title: "My Chart",
+  id: "chart1",
+  class: "my-chart",
+  width: 400,
+  height: 600,
+  series: [
+    {},
+    {
+      show: true,
+      spanGaps: false,
+      label: "RAM",
+      value: (self: unknown, rawValue: number): string => "$" + rawValue.toFixed(2),
+      stroke: "red",
+      width: 1,
+      fill: "rgba(255, 0, 0, 0.3)",
+      dash: [10, 5],
+    },
+  ],
+};
+
+const initialData = [
+  [0, 100],
+  [35, 71],
+  [90, 15],
+];
+
 export default (): ReactElement => {
   const [num, setNum] = useState(0);
   const [allData, setAllData] = useState<DataPoint[]>(initialData1);
-  const setDataRef = useRef<SetData>();
+  const setDataRef = useRef<CSetData>();
+  const setUPlotDataRef = useRef<USetData>();
 
-  const genData = (): void => {
+  const genChartJsData = (): void => {
     const increment = 500;
     const maxLength = 1500;
     const newData = [];
@@ -62,6 +91,20 @@ export default (): ReactElement => {
     setDataRef.current?.setData([allData.concat(newData)]);
   };
 
+  const genUPlotData = (): void => {
+    const newXData = [];
+    const newY1Data = [];
+    const newY2Data = [];
+    for (let i = 0; i < 5000; i++) {
+      newXData.push(i * 100);
+      newY1Data.push(Math.random() * 100);
+      newY2Data.push(Math.random() * 100);
+    }
+
+    // Pass fake data to UPlot component
+    setUPlotDataRef.current?.setData([newXData, newY1Data, newY2Data]);
+  };
+
   chartConfig1.data.datasets[0].data = initialData1;
 
   chartConfig2.data.datasets[0].data = initialData1;
@@ -72,10 +115,14 @@ export default (): ReactElement => {
       <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
         <View style={styles.body}>
           <View style={styles.sectionContainer}>
-            <Button onPress={genData} text={"Add Data"} />
+            <Button onPress={genUPlotData} text={"Add Data"} />
           </View>
-          <ChartJs config={chartConfig1} style={styles.chart} ref={setDataRef} />
-          <ChartJs config={chartConfig3} style={styles.chart} />
+          <UPlot opts={opts} data={initialData} style={styles.chart} ref={setUPlotDataRef} />
+          <View style={styles.sectionContainer}>
+            <Button onPress={genChartJsData} text={"Add Data"} />
+          </View>
+          <Chart config={chartConfig1} style={styles.chart} ref={setDataRef} />
+          <Chart config={chartConfig3} style={styles.chart} />
         </View>
       </ScrollView>
     </SafeAreaView>
