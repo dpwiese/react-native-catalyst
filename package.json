@@ -7,10 +7,11 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint {src,__tests__,App.*} --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "eslint {src,__tests__,App.*} --ext .js,.jsx,.ts,.tsx --fix",
+    "tc": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@dpwiese/react-native-canvas-charts": "0.0.2",
+    "@dpwiese/react-native-canvas-charts": "0.0.3",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.6",
     "@react-navigation/native": "^5.9.2",

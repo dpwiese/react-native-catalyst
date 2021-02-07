@@ -1,7 +1,7 @@
-import { SetData as CSetData, Chart, DataPoint } from "@dpwiese/react-native-canvas-charts/dist/ChartJs";
+import { SetData as CSetData, Chart, DataPoint } from "@dpwiese/react-native-canvas-charts/ChartJs";
 import React, { ReactElement, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import { UPlot, SetData as USetData } from "@dpwiese/react-native-canvas-charts/dist/UPlot";
+import { UPlot, SetData as USetData } from "@dpwiese/react-native-canvas-charts/UPlot";
 import Button from "../components/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import { chartConfig1 } from "../chart/chartConfig1";
