@@ -1,4 +1,4 @@
-import { DataPoint } from "@dpwiese/react-native-canvas-charts";
+import { DataPoint } from "@dpwiese/react-native-canvas-charts/dist/ChartJs";
 
 const xTickOptions = {
   autoSkipPadding: 100,
